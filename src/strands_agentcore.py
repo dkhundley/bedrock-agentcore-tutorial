@@ -7,9 +7,9 @@ from opentelemetry import baggage, context
 
 # Instantiating the model from AWS Bedrock
 bedrock_model = BedrockModel(
-    model_id="us.anthropic.claude-haiku-4-5-20251001-v1:0",
-    region_name="us-east-1",
-    temperature=0.7,
+    model_id = "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+    region_name = "us-east-1",
+    temperature = 0.7,
 )
 
 # Defining a custom tool as a Python function using the @tool decorator
@@ -34,17 +34,18 @@ def letter_counter(word: str, letter: str) -> int:
     return word.lower().count(letter.lower())
 
 # Creating an agent with tools built-in Strands tools and the custom tool
-agent = Agent(model=bedrock_model, tools=[calculator, current_time, letter_counter])
+agent = Agent(model = bedrock_model, tools = [calculator, current_time, letter_counter])
 
-# Initialize the Bedrock AgentCore App
+# Initializing the Bedrock AgentCore App
 app = BedrockAgentCoreApp()
 
+# Setting up the entrypoint for the app
 @app.entrypoint
 def invoke(payload):
     """Process user input and return a response"""
     user_message = payload.get("prompt", "Hello")
     
-    # Set session ID for OTEL if provided
+    # Setting session ID for OTEL if provided
     session_id = payload.get("session_id")
     if session_id:
         ctx = baggage.set_baggage("session.id", session_id)
