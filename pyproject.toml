@@ -4,4 +4,11 @@ version = "0.0.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "boto3>=1.40.66",
+    "ipykernel>=7.1.0",
+    "strands-agents>=1.15.0",
+    "strands-agents-tools>=0.2.14",
+    "bedrock-agentcore",
+    "aws-opentelemetry-distro>=0.10.1",
+]
