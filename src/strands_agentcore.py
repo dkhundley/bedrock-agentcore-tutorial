@@ -7,7 +7,7 @@ from opentelemetry import baggage, context
 
 # Instantiating the model from AWS Bedrock
 bedrock_model = BedrockModel(
-    model_id = "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+    model_id = "anthropic.claude-3-haiku-20240307-v1:0",
     region_name = "us-east-1",
     temperature = 0.7,
 )
@@ -47,11 +47,16 @@ def invoke(payload):
     
     # Setting session ID for OTEL if provided
     session_id = payload.get("session_id")
+    token = None
     if session_id:
         ctx = baggage.set_baggage("session.id", session_id)
-        context.attach(ctx)
-    
-    result = agent(user_message)
+        token = context.attach(ctx)
+
+    try:
+        result = agent(user_message)
+    finally:
+        if token is not None:
+            context.detach(token)
     return {"result": str(result.message)}
 
 if __name__ == "__main__":
